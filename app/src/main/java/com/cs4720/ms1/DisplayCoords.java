@@ -2,10 +2,12 @@ package com.cs4720.ms1;
 
 import android.content.Intent;
 import android.location.Location;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -46,17 +48,22 @@ public class DisplayCoords extends AppCompatActivity implements
 
         lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (lastLocation != null) {
-            TextView display = (TextView) findViewById(R.id.display);
+            TextView display = (TextView) findViewById(R.id.eventName);
             display.setTextSize(20);
             Intent intent = getIntent();
             String name = intent.getStringExtra(MainActivity.NAME);
-            String text = "Hello "+name+". Your location is (" +String.valueOf(lastLocation.getLatitude())+","+String.valueOf(lastLocation.getLongitude())+")";
-            display.setText(text);
+            //String text = "Hello "+name+". Your location is (" +String.valueOf(lastLocation.getLatitude())+","+String.valueOf(lastLocation.getLongitude())+")";
+            display.setText(name);
         }
     }
     @Override
     public void onConnectionFailed(ConnectionResult result) {
 
+    }
+
+    public void showTimePickerDialog(View v) {
+        DialogFragment newFragment = new DialogFragment();
+        newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
 
