@@ -35,25 +35,16 @@ public class MainActivity extends AppCompatActivity{
         EditText textBox = (EditText)findViewById(R.id.name_input);
         String name = textBox.getText().toString();
         String FILENAME = "data_storage.txt";
-        FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+        FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_APPEND);
         fos.write(name.getBytes());
         fos.close();
         FileInputStream fis = openFileInput(FILENAME);
-        InputStreamReader reader = new InputStreamReader(fis);
+        byte[] input = new byte[fis.available()];
         String data_read = "";
-        while(reader.read() != -1){
-            char[] i = new char[2];
-            int data =  reader.read();
-            i[0] = (char)data;
-            i[1] = (char)(data>>8);
-            data_read += i[0]+i[1];
-//            char[] char_array = new char[2];
-//            reader.read(char_array,0, 2);
-//            data_read += char_array[0] + char_array[1];
+        while(fis.read(input) != -1){
+            data_read += new String(input);
         }
-        //data_read += "!";
         fis.close();
-
 
         intent.putExtra(NAME, data_read);
         startActivity(intent);
