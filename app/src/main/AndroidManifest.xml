@@ -22,6 +22,17 @@
             android:name=".DisplayCoords"
             android:label="@string/title_activity_display_coords" >
         </activity>
+
+        <service
+            android:name=".TrackCoords"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+
+        <activity
+            android:name=".NewEvent"
+            android:label="@string/title_activity_new_event" >
+        </activity>
     </application>
 
 </manifest>

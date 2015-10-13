@@ -1,8 +1,10 @@
 package com.cs4720.ms1;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.location.Location;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,7 +19,8 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-public class DisplayCoords extends AppCompatActivity implements
+
+public class DisplayCoords extends FragmentActivity implements
         ConnectionCallbacks, OnConnectionFailedListener {
 
     protected GoogleApiClient googleApiClient;
@@ -62,8 +65,9 @@ public class DisplayCoords extends AppCompatActivity implements
     }
 
     public void showTimePickerDialog(View v) {
-        DialogFragment newFragment = new DialogFragment();
-        newFragment.show(getSupportFragmentManager(), "timePicker");
+        TimePickerFragment newFragment = new TimePickerFragment();
+        FragmentManager f = getFragmentManager();
+        newFragment.show(f, "timePicker");
     }
 
 
