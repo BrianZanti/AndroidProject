@@ -1,6 +1,7 @@
 package com.cs4720.ms1;
 
 import android.content.Context;
+import android.location.Location;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,13 +9,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Scanner;
 
 /**
  * Created by Brian on 10/6/2015.
  */
 public class FileIO {
-    private String FILENAME = "events.txt";
+    private String FILENAME = "gps_storage.txt";
 
     /*public FileIO(String filename) throws IOException {
         FILENAME = filename;
@@ -28,23 +30,30 @@ public class FileIO {
 
     }
 
-    public String[][] readFile(Context context) throws IOException {
-        FileInputStream fis = context.openFileInput(FILENAME);
-        byte[] input = new byte[fis.available()];
-        String data_read = "";
-        while(fis.read(input) != -1){
-            data_read += new String(input);
+    public String[][] readFile(Context context) {
+        try {
+            FileInputStream fis = context.openFileInput(FILENAME);
+            byte[] input = new byte[fis.available()];
+            String data_read = "";
+            while (fis.read(input) != -1) {
+                data_read += new String(input);
+            }
+            if (data_read.equals("")) {
+                return null;
+            }
+            String[] lines = data_read.split("\\r?\\n");
+            String[][] args = new String[lines.length][];
+            for (int i = 0; i < lines.length; i++) {
+                args[i] = lines[i].split(" ");
+            }
+            return args;
         }
-        if(data_read.equals("")){
-            return null;
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+            e.printStackTrace();
         }
-        String[] lines = data_read.split("\\r?\\n");
-        String[][] args = new String[lines.length][];
-        for(int i = 0; i < lines.length; i++)
-        {
-            args[i] = lines[i].split(" ");
-        }
-        return args;
+        return null;
     }
 
     public boolean containsEventName(String eventName, Context context) throws IOException {
@@ -75,5 +84,29 @@ public class FileIO {
         fos.close();
         /*File file = new File(FILENAME);
         file.delete();*/
+    }
+
+    public EventTracker[] getEvents(Context context) throws IOException {
+        EventTracker[] events = {};
+        String[][] data = readFile(context);
+        if(data == null){
+            return events;
+        }
+        for(int i = 0; i < data.length; i++){
+            ArrayList<long[]> coords = new ArrayList<>();
+            for(int j = 3; j < data[i].length; j += 2)
+            {
+                long[] longlat = {Long.parseLong(data[i][j]), Long.parseLong(data[i][j+1])};
+                coords.add(longlat);
+            }
+            Calendar start = Calendar.getInstance();
+            Calendar end = Calendar.getInstance();
+            start.setTimeInMillis(Long.parseLong(data[i][1]));
+            end.setTimeInMillis(Long.parseLong(data[i][2]));
+            EventTracker e = new EventTracker(data[i][0],start, end,coords);
+            events[i] = e;
+        }
+
+        return events;
     }
 }

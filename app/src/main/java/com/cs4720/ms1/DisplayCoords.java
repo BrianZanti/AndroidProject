@@ -51,12 +51,7 @@ public class DisplayCoords extends FragmentActivity implements
 
         lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (lastLocation != null) {
-            TextView display = (TextView) findViewById(R.id.eventName);
-            display.setTextSize(20);
-            Intent intent = getIntent();
-            String name = intent.getStringExtra(MainActivity.NAME);
-            //String text = "Hello "+name+". Your location is (" +String.valueOf(lastLocation.getLatitude())+","+String.valueOf(lastLocation.getLongitude())+")";
-            display.setText(name);
+
         }
     }
     @Override

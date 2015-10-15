@@ -1,5 +1,8 @@
 package com.cs4720.ms1;
 
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import android.app.Activity;
@@ -30,56 +33,43 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity{
 
-
-    public static final String NAME = "com.cs4720.NAME";
-    protected Location lastLocation;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        String[] events = {"1","2","3","4","6","12","34","12","11","13","2","2","3","4","6","12","34","12","11","13","2"};
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new MyAdapter(events);
+        mRecyclerView.setAdapter(mAdapter);
     }
     @Override
     public void onStart() {
         super.onStart();
-        String FILENAME = "gps_storage.txt";
-        TextView displayCoords = (TextView)findViewById(R.id.coords);
-
     }
 
-    public void submitEventName(View view) throws IOException {
+    /*public void submitEventName(View view) throws IOException {
         EditText name = (EditText)findViewById(R.id.name_input);
         String eventName = name.getText().toString();
         TextView eventExists = (TextView)findViewById(R.id.eventExists);
         FileIO fio = new FileIO();
         eventExists.setText(String.valueOf(fio.containsEventName(eventName, getApplicationContext())));
-    }
-
+    }*/
 
     public void alert(String alert) {
         Toast.makeText(this, alert, Toast.LENGTH_LONG).show();
     }
 
 
-    public void startService(View view){
-        Intent intent = new Intent(this, TrackCoords.class);
-        startService(intent);
-    }
-
-    public void stopService(View view){
-        Intent intent = new Intent(this, TrackCoords.class);
-        stopService(intent);
-    }
-
-    public void setTimePress(View view){
-        TimePickerFragment newFragment = new TimePickerFragment();
-        FragmentManager f = getFragmentManager();
-        newFragment.show(f, "timePicker");
-    }
-
     public void launchCreateEvent(View view){
         Intent intent = new Intent(this, NewEvent.class);
-
         startActivity(intent);
     }
 
@@ -88,5 +78,17 @@ public class MainActivity extends AppCompatActivity{
         fio.clearDB(getApplicationContext());
         String[][] data = fio.readFile(getApplicationContext());
         String s;
+    }
+
+    public void showEvents(View view){
+
+        /*EventTracker[] events = {};
+        try {
+            events = (new FileIO()).getEvents(getApplicationContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
+
     }
 }
