@@ -2,14 +2,17 @@ package com.cs4720.ms1;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,20 +23,44 @@ import java.util.Date;
 public class NewEvent extends Activity implements TimePickerFragment.timePickable, DatePickerFragment.datePickable {
 
     private EventTracker newEvent;
-
+    public boolean startTimeSet;
+    public boolean endTimeSet;
+    public boolean startDateSet;
+    public boolean endDateSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
         newEvent = new EventTracker();
+        if(savedInstanceState != null)
+        {
+            ((TextView)findViewById(R.id.setStartTime)).setText(savedInstanceState.getString("startTime"));
+            ((TextView)findViewById(R.id.setEndTime)).setText(savedInstanceState.getString("endTime"));
+            ((TextView)findViewById(R.id.setStartDate)).setText(savedInstanceState.getString("startDate"));
+            ((TextView)findViewById(R.id.setEndDate)).setText(savedInstanceState.getString("endDate"));
+            ((EditText)findViewById(R.id.eventName)).setText(savedInstanceState.getString("eventName"));
+            startTimeSet = savedInstanceState.getBoolean("startTimeSet");
+            endTimeSet = savedInstanceState.getBoolean("endTimeSet");
+            startDateSet = savedInstanceState.getBoolean("startDateSet");
+            endDateSet = savedInstanceState.getBoolean("endDateSet");
+            newEvent.setStartTimeInMillis(savedInstanceState.getLong("eStartTime"));
+            newEvent.setEndTimeInMillis(savedInstanceState.getLong("eEndTime"));
+        }
+        else
+        {
+            startTimeSet = false;
+            endTimeSet = false;
+            startDateSet = false;
+            endDateSet = false;
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_new_event, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -78,51 +105,108 @@ public class NewEvent extends Activity implements TimePickerFragment.timePickabl
     @Override
     public void setStartTime(Calendar startTime) {
         newEvent.setStartTime(startTime);
-        TextView tv = (TextView)findViewById(R.id.startTime);
+        Button b = (Button)findViewById(R.id.setStartTime);
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.applyPattern("hh:mm a");
         String time = sdf.format(startTime.getTime());
-        tv.setText(time);
+        b.setText(time);
+        startTimeSet = true;
     }
 
     @Override
     public void setEndTime(Calendar endTime) {
         newEvent.setEndTime(endTime);
-        TextView tv = (TextView)findViewById(R.id.endTime);
+        Button b = (Button)findViewById(R.id.setEndTime);
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.applyPattern("hh:mm a");
         String time = sdf.format(endTime.getTime());
-        tv.setText(time);
+        b.setText(time);
+
+        endTimeSet = true;
     }
 
 
     @Override
     public void setStartDate(Calendar startDate) {
         newEvent.setStartDate(startDate);
-        TextView tv = (TextView)findViewById(R.id.startDate);
+        Button b = (Button)findViewById(R.id.setStartDate);
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.applyPattern("MM/dd/yyyy");
         String time = sdf.format(startDate.getTime());
-        tv.setText(time);
+        b.setText(time);
+
+        startDateSet = true;
     }
 
     @Override
     public void setEndDate(Calendar endDate) {
         newEvent.setEndDate(endDate);
-        TextView tv = (TextView)findViewById(R.id.endDate);
+        Button b = (Button)findViewById(R.id.setEndDate);
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.applyPattern("MM/dd/yyyy");
         String time = sdf.format(endDate.getTime());
-        tv.setText(time);
+        b.setText(time);
+
+        endDateSet = true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        String startTime = ((TextView)findViewById(R.id.setStartTime)).getText().toString();
+        String endTime = ((TextView)findViewById(R.id.setEndTime)).getText().toString();
+        String startDate = ((TextView)findViewById(R.id.setStartDate)).getText().toString();
+        String endDate = ((TextView)findViewById(R.id.setEndDate)).getText().toString();
+        String eventName = ((EditText)findViewById(R.id.eventName)).getText().toString();
+        savedInstanceState.putString("eventName", eventName);
+        savedInstanceState.putString("startTime",startTime );
+        savedInstanceState.putString("endTime", endTime);
+        savedInstanceState.putString("startDate", startDate);
+        savedInstanceState.putString("endDate", endDate);
+        savedInstanceState.putBoolean("startTimeSet", startTimeSet);
+        savedInstanceState.putBoolean("startTimeSet",endTimeSet);
+        savedInstanceState.putBoolean("startTimeSet",startDateSet);
+        savedInstanceState.putBoolean("startTimeSet", endDateSet);
+        savedInstanceState.putLong("eStartTime",newEvent.getStartTimeInMillis());
+        savedInstanceState.putLong("eEndTime",newEvent.getEndTimeInMillis());
     }
 
     public void saveEvent(View view) throws IOException {
-        if(newEvent.getEndTime() - newEvent.getStartTime() < 0) {
+        String eventName = ((EditText)findViewById(R.id.eventName)).getText().toString();
+
+        Intent intent2 = new Intent(this, MyService.class);
+        startService(intent2);
+
+        if(eventName.equals("")){
+            TextView tv = (TextView)findViewById(R.id.errorField);
+            tv.setText("You must specify an Event name.");
+        }
+        else if(!startTimeSet){
+            TextView tv = (TextView)findViewById(R.id.errorField);
+            tv.setText("You must specify a start time.");
+        }
+        else if(!endTimeSet){
+            TextView tv = (TextView)findViewById(R.id.errorField);
+            tv.setText("You must specify an end time.");
+        }
+        else if(!startDateSet){
+            TextView tv = (TextView)findViewById(R.id.errorField);
+            tv.setText("You must specify a start date.");
+        }
+        else if(!endDateSet){
+            TextView tv = (TextView)findViewById(R.id.errorField);
+            tv.setText("You must specify an end date.");
+        }
+        else if(newEvent.getEndTime() - newEvent.getStartTime() < 0) {
             TextView tv = (TextView)findViewById(R.id.errorField);
             tv.setText("End time must be after start time");
         }
-        EditText eventName = (EditText)findViewById(R.id.eventName);
-        newEvent.setName(eventName.getText().toString());
-        newEvent.save(getApplicationContext());
+        else {
+            newEvent.setName(eventName);
+            newEvent.save(getApplicationContext());
+            Toast.makeText(this, "Event Creted", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 }

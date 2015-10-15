@@ -3,6 +3,7 @@ package com.cs4720.ms1;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuInflater;
 import android.widget.TextView;
 
 import android.app.Activity;
@@ -36,13 +37,18 @@ public class MainActivity extends AppCompatActivity{
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-
+    private EventTracker[] events;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String[] events = {"1","2","3","4","6","12","34","12","11","13","2","2","3","4","6","12","34","12","11","13","2"};
-
+        //String[] events = {"1","2","3","4","6","12","34","12","11","13","2","2","3","4","6","12","34","12","11","13","2"};
+        events = new EventTracker[0];
+        try {
+            events = (new FileIO()).getEvents(getApplicationContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
@@ -50,9 +56,45 @@ public class MainActivity extends AppCompatActivity{
         mAdapter = new MyAdapter(events);
         mRecyclerView.setAdapter(mAdapter);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent(this, NewEvent.class);
+        startActivity(intent);
+        return true;
+    }
+
     @Override
     public void onStart() {
         super.onStart();
+        events = new EventTracker[0];
+        try {
+            events = (new FileIO()).getEvents(getApplicationContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for(int i = 0; i < events.length; i++){
+            EventTracker e = events[i];
+            if(e.getEndTimeInMillis() > System.currentTimeMillis()
+                    && !e.isServiceLaunched()){
+                Intent intent = new Intent(this, MyService.class);
+                Bundle b = new Bundle();
+                b.putString("name", e.getName());
+                b.putLong("end",e.getEndTimeInMillis());
+                b.putLong("start",e.getStartTimeInMillis());
+                intent.putExtra("bundle", b);
+                startService(intent);
+                e.launchService();
+            }
+        }
+
     }
 
     /*public void submitEventName(View view) throws IOException {

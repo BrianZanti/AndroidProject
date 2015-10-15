@@ -25,18 +25,21 @@ public class EventTracker {
     private Calendar end;
     private final String FILENAME = "gps_storage.txt";
     private String name = "";
+    private boolean serviceLaunched;
 
     public EventTracker(){
         coordinates = new ArrayList<>();
         start = Calendar.getInstance();
         end = Calendar.getInstance();
+        serviceLaunched = false;
     }
 
-    public EventTracker(String name, Calendar start, Calendar end, ArrayList<long[]> coordinates){
+    public EventTracker(String name, Calendar start, Calendar end, ArrayList<long[]> coordinates, boolean serviceLaunched){
         this.start = start;
         this.end = end;
         this.name = name;
         this.coordinates = coordinates;
+        this.serviceLaunched = serviceLaunched;
     }
 
     public void setStartTime(Calendar startTime){
@@ -83,6 +86,34 @@ public class EventTracker {
         String writeString = "";
         writeString += name + " " + String.valueOf(getStartTime()) + " " + String.valueOf(getEndTime()) + "\n";
         fio.write(writeString, context);
+    }
+
+    public long getStartTimeInMillis(){
+        return start.getTimeInMillis();
+    }
+
+    public long getEndTimeInMillis(){
+        return end.getTimeInMillis();
+    }
+
+    public void setStartTimeInMillis(long start){
+        this.start.setTimeInMillis(start);
+    }
+
+    public void setEndTimeInMillis(long end){
+        this.end.setTimeInMillis(end);
+    }
+
+    public String getName(){
+        return this.name;
+    }
+
+    public void launchService(){
+        this.serviceLaunched = true;
+    }
+
+    public boolean isServiceLaunched(){
+        return serviceLaunched;
     }
 
     public String getText(){

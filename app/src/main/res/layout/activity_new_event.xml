@@ -1,38 +1,34 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context="com.cs4720.ms1.NewEvent"
+    android:layout_gravity="center_vertical"
     android:orientation="vertical">
 
     <EditText android:hint="Click to Edit Event Name" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/eventName"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerInParent="true"
+         />
 
-    <Button
+    <Space
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/eventName"
+        android:id="@+id/space1"/>
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set Start Time"
-        android:id="@+id/setStartTime"
-        android:onClick="startTimePressed"
-        android:layout_below="@+id/setEndTime"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Set End Time"
-        android:id="@+id/setEndTime"
-        android:onClick="endTimePressed"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignBaseline="@+id/setTime" />
-
+        android:textSize="30dp"
+        android:text="Start:"
+        android:id="@+id/start"
+        android:layout_below="@+id/space1"
+        android:layout_centerInParent="true"
+         />
 
     <Button
         android:layout_width="wrap_content"
@@ -40,9 +36,45 @@
         android:text="Set Start Date"
         android:id="@+id/setStartDate"
         android:onClick="startDatePressed"
-        android:layout_below="@+id/startDate"
-        android:layout_alignRight="@+id/setStartTime"
-        android:layout_alignEnd="@+id/setStartTime" />
+        android:layout_below="@+id/start"
+
+        android:layout_alignParentLeft="true"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Start Time"
+        android:id="@+id/setStartTime"
+        android:onClick="startTimePressed"
+        android:layout_below="@+id/start"
+        android:layout_alignParentRight="true"
+
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/setStartTime"
+        android:paddingTop="10dp"
+        android:background="@android:color/darker_gray"/>
+
+
+    <Space
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/setStartTime"
+        android:id="@+id/space2"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:text="End:"
+        android:id="@+id/end"
+        android:layout_below="@+id/space2"
+        android:layout_centerInParent="true"
+        />
 
     <Button
         android:layout_width="wrap_content"
@@ -50,61 +82,53 @@
         android:text="Set End Date"
         android:id="@+id/setEndDate"
         android:onClick="endDatePressed"
-        android:layout_below="@+id/setStartTime"
+        android:layout_below="@+id/end"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="startTime"
-        android:id="@+id/startTime"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="endTime"
-        android:id="@+id/endTime"
-        android:layout_alignParentBottom="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="startDate"
-        android:id="@+id/startDate" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="endDate"
-        android:id="@+id/endDate" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Errors here"
-        android:id="@+id/errorField" />
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/end"
+        android:text="Set End Time"
+        android:id="@+id/setEndTime"
+        android:onClick="endTimePressed"
+        android:layout_alignParentRight="true"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/setEndTime"
+        android:paddingTop="10dp"
+        android:background="@android:color/darker_gray"/>
+    <Space
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/setEndDate"
+        android:id="@+id/space3"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/space3"
         android:text="Save"
+        android:textSize="20dp"
         android:id="@+id/save"
         android:onClick="saveEvent"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/startDate"
-        android:layout_toEndOf="@+id/startDate" />
+        android:layout_centerInParent="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:background="@color/green"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/errorField"
+        android:textColor="@color/red"
+        android:layout_below="@id/save"
+        android:layout_centerInParent="true"/>
 
-
-</LinearLayout>
+</RelativeLayout>

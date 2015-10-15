@@ -10,7 +10,7 @@ import android.widget.TextView;
  * Created by Brian on 10/13/2015.
  */
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    private String[] mDataset;
+    private EventTracker[] mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -24,7 +24,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
-    public MyAdapter(String[] myDataset) {
+    public MyAdapter(EventTracker[] myDataset) {
         mDataset = myDataset;
     }
 
@@ -46,7 +46,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.name.setText(mDataset[position]);
+        holder.name.setText(mDataset[position].getText());
     }
 
     // Return the size of your dataset (invoked by the layout manager)

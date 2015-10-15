@@ -32,6 +32,11 @@ public class FileIO {
 
     public String[][] readFile(Context context) {
         try {
+            File file = new File(FILENAME);
+            /*if(!file.exists())
+            {
+                return null;
+            }*/
             FileInputStream fis = context.openFileInput(FILENAME);
             byte[] input = new byte[fis.available()];
             String data_read = "";
@@ -103,10 +108,11 @@ public class FileIO {
             Calendar end = Calendar.getInstance();
             start.setTimeInMillis(Long.parseLong(data[i][1]));
             end.setTimeInMillis(Long.parseLong(data[i][2]));
-            EventTracker e = new EventTracker(data[i][0],start, end,coords);
+            EventTracker e = new EventTracker(data[i][0],start, end,coords, false);
             events[i] = e;
         }
-
+        
+        String[][] s = readFile(context);
         return events;
     }
 }
