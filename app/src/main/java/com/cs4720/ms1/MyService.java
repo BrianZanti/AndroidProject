@@ -49,9 +49,10 @@ public class MyService extends Service implements
 
     @Override
     public void onCreate() {
+        Log.i("====================","============================================");
+
         buildGoogleApiClient();
         coords = new ArrayList<>();
-
     }
 
     @Override
@@ -94,6 +95,7 @@ public class MyService extends Service implements
 
     @Override
     public void onConnected(Bundle bundle) {
+        Log.i("====================","============================================");
         mHandler.removeCallbacks(mUpdateTimeTask);
         mHandler.postDelayed(mUpdateTimeTask, UPDATE_INTERVAL);
     }

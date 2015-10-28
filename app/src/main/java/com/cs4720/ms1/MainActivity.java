@@ -31,19 +31,20 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity{
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private EventTracker[] events;
+    private ArrayList<EventTracker> events;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //String[] events = {"1","2","3","4","6","12","34","12","11","13","2","2","3","4","6","12","34","12","11","13","2"};
-        events = new EventTracker[0];
+        events = new ArrayList<>();
         try {
             events = (new FileIO()).getEvents(getApplicationContext());
         } catch (IOException e) {
@@ -53,8 +54,9 @@ public class MainActivity extends AppCompatActivity{
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MyAdapter(events);
+        mAdapter = new MyAdapter(events,getApplicationContext());
         mRecyclerView.setAdapter(mAdapter);
+
     }
 
     @Override
@@ -74,17 +76,17 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public void onStart() {
         super.onStart();
-        events = new EventTracker[0];
+        events = new ArrayList<>();
         try {
             events = (new FileIO()).getEvents(getApplicationContext());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for(int i = 0; i < events.length; i++){
-            EventTracker e = events[i];
+        for(int i = 0; i < events.size(); i++){
+            EventTracker e = events.get(i);
             if(e.getEndTimeInMillis() > System.currentTimeMillis()
                     && !e.isServiceLaunched()){
-                Intent intent = new Intent(this, MyService.class);
+                Intent intent = new Intent(this, TrackCoords.class);
                 Bundle b = new Bundle();
                 b.putString("name", e.getName());
                 b.putLong("end",e.getEndTimeInMillis());

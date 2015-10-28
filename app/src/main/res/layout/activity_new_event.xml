@@ -5,13 +5,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context="com.cs4720.ms1.NewEvent"
     android:layout_gravity="center_vertical"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/background">
 
     <EditText android:hint="Click to Edit Event Name" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/eventName"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
          />
 
     <Space
@@ -28,6 +31,7 @@
         android:id="@+id/start"
         android:layout_below="@+id/space1"
         android:layout_centerInParent="true"
+        android:textColor="#FFFFFF"
          />
 
     <Button
@@ -74,6 +78,7 @@
         android:id="@+id/end"
         android:layout_below="@+id/space2"
         android:layout_centerInParent="true"
+        android:textColor="#FFFFFF"
         />
 
     <Button

@@ -6,10 +6,4 @@
         android:showAsAction="always"
         >
     </item>
-    <item android:id="@+id/newE"
-        android:title="New Event"
-        android:icon="@android:drawable/btn_plus"
-        android:showAsAction="never"
-        >
-    </item>
 </menu>

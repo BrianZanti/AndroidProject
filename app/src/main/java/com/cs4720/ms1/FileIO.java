@@ -3,6 +3,8 @@ package com.cs4720.ms1;
 import android.content.Context;
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -91,17 +93,17 @@ public class FileIO {
         file.delete();*/
     }
 
-    public EventTracker[] getEvents(Context context) throws IOException {
-        EventTracker[] events = {};
+    public ArrayList<EventTracker> getEvents(Context context) throws IOException {
+        ArrayList<EventTracker> events = new ArrayList<>();
         String[][] data = readFile(context);
         if(data == null){
             return events;
         }
         for(int i = 0; i < data.length; i++){
-            ArrayList<long[]> coords = new ArrayList<>();
+            ArrayList<LatLng> coords = new ArrayList<>();
             for(int j = 3; j < data[i].length; j += 2)
             {
-                long[] longlat = {Long.parseLong(data[i][j]), Long.parseLong(data[i][j+1])};
+                LatLng longlat = new LatLng(Double.parseDouble(data[i][j].trim()), Double.parseDouble(data[i][j+1].trim()));
                 coords.add(longlat);
             }
             Calendar start = Calendar.getInstance();
@@ -109,10 +111,49 @@ public class FileIO {
             start.setTimeInMillis(Long.parseLong(data[i][1]));
             end.setTimeInMillis(Long.parseLong(data[i][2]));
             EventTracker e = new EventTracker(data[i][0],start, end,coords, false);
-            events[i] = e;
+            events.add(e);
         }
-        
-        String[][] s = readFile(context);
+
+        //String[][] s = readFile(context);
         return events;
+    }
+
+    public void writeCoords(String name, ArrayList<Location> coords, Context context) throws IOException {
+        String[][] data = readFile(context);
+        String writeData = "";
+        for(int i = 0; i < data.length; i++){
+            writeData += data[i][0] + " " + data[i][1] + " " + data[i][2];
+            if(data[i][0].equals(name)){
+                for(int j = 0; j < coords.size(); j++){
+                    writeData += " " + String.valueOf(coords.get(j).getLatitude()) + " "
+                        + String.valueOf(coords.get(j).getLongitude());
+                }
+            }
+            writeData += "\n";
+        }
+        FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+        fos.write(writeData.getBytes());
+        fos.close();
+
+    }
+
+    public EventTracker getEvent(Context context, String name){
+        String[][] args = readFile(context);
+        for(int i = 0; i < args.length; i++){
+            if(args[i][0].equals(name)){
+                Calendar start = Calendar.getInstance();
+                start.setTimeInMillis(Long.parseLong(args[i][1]));
+                Calendar end = Calendar.getInstance();
+                end.setTimeInMillis(Long.parseLong(args[i][2]));
+                ArrayList<LatLng> coords = new ArrayList<>();
+                for(int j = 3; j < args[i].length; j+=2){
+                    LatLng l = new LatLng(Double.parseDouble(args[i][j]),Double.parseDouble(args[i][j+1]));
+                    coords.add(l);
+                }
+                EventTracker e = new EventTracker(args[i][0],start,end, coords,true);
+                return e;
+            }
+        }
+        return null;
     }
 }

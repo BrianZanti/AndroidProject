@@ -3,11 +3,14 @@ package com.cs4720.ms1;
 import android.content.Context;
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,7 +23,7 @@ import java.io.IOException;
  */
 public class EventTracker {
 
-    private ArrayList<long[]> coordinates;
+    private ArrayList<LatLng> coordinates;
     private Calendar start;
     private Calendar end;
     private final String FILENAME = "gps_storage.txt";
@@ -28,13 +31,13 @@ public class EventTracker {
     private boolean serviceLaunched;
 
     public EventTracker(){
-        coordinates = new ArrayList<>();
+        coordinates = new ArrayList<LatLng>();
         start = Calendar.getInstance();
         end = Calendar.getInstance();
         serviceLaunched = false;
     }
 
-    public EventTracker(String name, Calendar start, Calendar end, ArrayList<long[]> coordinates, boolean serviceLaunched){
+    public EventTracker(String name, Calendar start, Calendar end, ArrayList<LatLng> coordinates, boolean serviceLaunched){
         this.start = start;
         this.end = end;
         this.name = name;
@@ -84,6 +87,7 @@ public class EventTracker {
     public void save(Context context) throws IOException {
         FileIO fio = new FileIO();
         String writeString = "";
+
         writeString += name + " " + String.valueOf(getStartTime()) + " " + String.valueOf(getEndTime()) + "\n";
         fio.write(writeString, context);
     }
@@ -116,7 +120,18 @@ public class EventTracker {
         return serviceLaunched;
     }
 
-    public String getText(){
-        return name;
+    public String[] getText(){
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern("MM/dd/yyyy hh:mm a");
+        SimpleDateFormat sdf2 = new SimpleDateFormat();
+        sdf2.applyPattern("MM/dd/yyyy hh:mm a");
+        String startString = "Start Time: "+sdf.format(start.getTime());
+        String endString = "End Time: "+sdf2.format(end.getTime());
+        String[] s = {name,startString,endString};
+        return s;
+    }
+
+    public ArrayList<LatLng> getCoords(){
+        return this.coordinates;
     }
 }

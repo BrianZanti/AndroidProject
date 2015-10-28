@@ -174,9 +174,6 @@ public class NewEvent extends Activity implements TimePickerFragment.timePickabl
     public void saveEvent(View view) throws IOException {
         String eventName = ((EditText)findViewById(R.id.eventName)).getText().toString();
 
-        Intent intent2 = new Intent(this, MyService.class);
-        startService(intent2);
-
         if(eventName.equals("")){
             TextView tv = (TextView)findViewById(R.id.errorField);
             tv.setText("You must specify an Event name.");
@@ -199,7 +196,11 @@ public class NewEvent extends Activity implements TimePickerFragment.timePickabl
         }
         else if(newEvent.getEndTime() - newEvent.getStartTime() < 0) {
             TextView tv = (TextView)findViewById(R.id.errorField);
-            tv.setText("End time must be after start time");
+            tv.setText("End time must be after start time.");
+        }
+        else if((new FileIO()).containsEventName(eventName,getApplicationContext())){
+            TextView tv = (TextView)findViewById(R.id.errorField);
+            tv.setText("Event with that name already exists.");
         }
         else {
             newEvent.setName(eventName);

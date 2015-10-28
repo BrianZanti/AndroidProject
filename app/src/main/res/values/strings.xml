@@ -6,4 +6,6 @@
     <string name="title_activity_display_coords">DisplayCoords</string>
     <string name="title_activity_new_event">NewEvent</string>
     <string name="element_text">Element</string>
+    <string name="title_activity_show_event">ShowEvent</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

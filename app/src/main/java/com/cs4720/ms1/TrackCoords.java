@@ -16,6 +16,7 @@ import com.google.android.gms.location.LocationServices;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Brian on 9/29/2015.
@@ -39,24 +40,33 @@ public class TrackCoords extends IntentService implements GoogleApiClient.Connec
     }
 
     protected void onHandleIntent(Intent intent) {
+        ArrayList<Location> coords = new ArrayList<>();
         Log.i("Handling Intent", "Handling Intent");
+        Bundle args = intent.getBundleExtra("bundle");
+        long start = args.getLong("start");
+        long end = args.getLong("end");
+        String name = args.getString("name");
         try {
-            Thread.sleep((long) 5000);
+            long waitTime = start - System.currentTimeMillis();
+            if(waitTime>0)
+            {
+                Thread.sleep(waitTime);
+            }
         }
         catch(Exception e){}
         Log.i("Waking up", "Waking Up");
         buildGoogleApiClient();
         googleApiClient.connect();
         while(!connected);
-        long endTime = System.currentTimeMillis()+60000;
-        while(System.currentTimeMillis() - endTime < 0)
+        while(System.currentTimeMillis() - end < 0)
         {
             Log.i("While Loop","While Loop");
             Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if( location != null) {
                 Log.i("Recording Location", "(" + location.getLatitude() + "," + location.getLongitude() + ")");
                 String s =  "(" + location.getLatitude() + "," + location.getLongitude() + ")";
-                String FILENAME = "gps_storage.txt";
+                coords.add(location);
+                /*String FILENAME = "gps_storage.txt";
                 try {
                     FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_APPEND);
                     fos.write(s.getBytes());
@@ -65,15 +75,19 @@ public class TrackCoords extends IntentService implements GoogleApiClient.Connec
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
-
+                }*/
             }
-            try {
-                Thread.sleep(5000);
+            try{
+                Thread.sleep(UPDATE_INTERVAL);
             }
-            catch(Exception e){}
+            catch(Exception e){e.printStackTrace();}
         }
         Log.i("Ending Thread","Ending Thread");
+        try {
+            (new FileIO()).writeCoords(name,coords,getApplicationContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -101,11 +115,4 @@ public class TrackCoords extends IntentService implements GoogleApiClient.Connec
         googleApiClient.connect();
     }
 
-    /*private Runnable mUpdateTimeTask = new Runnable() {
-        public void run() {
-            Toast.makeText(TrackCoords.this, "Current Time: " + System.currentTimeMillis(), Toast.LENGTH_LONG).show();
-
-            mHandler.postDelayed(this, UPDATE_INTERVAL);
-        }
-    };*/
 }
