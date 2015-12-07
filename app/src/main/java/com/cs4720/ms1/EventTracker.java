@@ -23,7 +23,7 @@ import java.io.IOException;
  */
 public class EventTracker {
 
-    private ArrayList<LatLng> coordinates;
+    private ArrayList<Coord> coordinates;
     private Calendar start;
     private Calendar end;
     private final String FILENAME = "gps_storage.txt";
@@ -31,18 +31,17 @@ public class EventTracker {
     private boolean serviceLaunched;
 
     public EventTracker(){
-        coordinates = new ArrayList<LatLng>();
+        coordinates = new ArrayList<Coord>();
         start = Calendar.getInstance();
         end = Calendar.getInstance();
         serviceLaunched = false;
     }
 
-    public EventTracker(String name, Calendar start, Calendar end, ArrayList<LatLng> coordinates, boolean serviceLaunched){
+    public EventTracker(String name, Calendar start, Calendar end, ArrayList<Coord> coordinates){
         this.start = start;
         this.end = end;
         this.name = name;
         this.coordinates = coordinates;
-        this.serviceLaunched = serviceLaunched;
     }
 
     public void setStartTime(Calendar startTime){
@@ -85,11 +84,11 @@ public class EventTracker {
     }
 
     public void save(Context context) throws IOException {
-        FileIO fio = new FileIO();
+
         String writeString = "";
 
         writeString += name + " " + String.valueOf(getStartTime()) + " " + String.valueOf(getEndTime()) + "\n";
-        fio.write(writeString, context);
+        //fio.write(writeString, context);
     }
 
     public long getStartTimeInMillis(){
@@ -131,7 +130,7 @@ public class EventTracker {
         return s;
     }
 
-    public ArrayList<LatLng> getCoords(){
+    public ArrayList<Coord> getCoords(){
         return this.coordinates;
     }
 }

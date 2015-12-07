@@ -3,6 +3,7 @@ package com.cs4720.ms1;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -173,39 +174,35 @@ public class NewEvent extends Activity implements TimePickerFragment.timePickabl
 
     public void saveEvent(View view) throws IOException {
         String eventName = ((EditText)findViewById(R.id.eventName)).getText().toString();
-
+        TextView tv = (TextView)findViewById(R.id.errorField);
         if(eventName.equals("")){
-            TextView tv = (TextView)findViewById(R.id.errorField);
             tv.setText("You must specify an Event name.");
         }
         else if(!startTimeSet){
-            TextView tv = (TextView)findViewById(R.id.errorField);
             tv.setText("You must specify a start time.");
         }
         else if(!endTimeSet){
-            TextView tv = (TextView)findViewById(R.id.errorField);
             tv.setText("You must specify an end time.");
         }
         else if(!startDateSet){
-            TextView tv = (TextView)findViewById(R.id.errorField);
             tv.setText("You must specify a start date.");
         }
         else if(!endDateSet){
-            TextView tv = (TextView)findViewById(R.id.errorField);
             tv.setText("You must specify an end date.");
         }
         else if(newEvent.getEndTime() - newEvent.getStartTime() < 0) {
-            TextView tv = (TextView)findViewById(R.id.errorField);
             tv.setText("End time must be after start time.");
-        }
-        else if((new FileIO()).containsEventName(eventName,getApplicationContext())){
-            TextView tv = (TextView)findViewById(R.id.errorField);
-            tv.setText("Event with that name already exists.");
         }
         else {
             newEvent.setName(eventName);
-            newEvent.save(getApplicationContext());
-            Toast.makeText(this, "Event Creted", Toast.LENGTH_LONG).show();
+            DBHelper db = new DBHelper(this);
+            if(!db.createEvent(newEvent.getName(), newEvent.getStartTimeInMillis(), newEvent.getEndTimeInMillis())){
+                tv.setText("An Event with that name already exists.");
+                return;
+            }
+            Toast.makeText(this, "Event Created", Toast.LENGTH_LONG).show();
+            Alarm a = new Alarm();
+            a.setAlarm(this, newEvent.getName(), newEvent.getStartTimeInMillis());
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }

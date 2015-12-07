@@ -5,7 +5,6 @@
     <uses-sdk android:minSdkVersion="11" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -13,7 +12,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -57,10 +55,6 @@
             android:name=".NewEvent"
             android:label="@string/title_activity_new_event" >
         </activity>
-        <activity
-            android:name=".ShowEvent"
-            android:label="@string/title_activity_show_event" >
-        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -72,6 +66,20 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" >
+        </activity>
+        <activity
+            android:name=".ViewCloudData"
+            android:label="@string/title_activity_view_cloud_data" >
+        </activity>
+
+        <receiver
+            android:name=".Alarm"
+            android:enabled="true" >
+        </receiver>
+
+        <activity
+            android:name=".TempMapActivity"
+            android:label="@string/title_activity_temp_map" >
         </activity>
     </application>
 

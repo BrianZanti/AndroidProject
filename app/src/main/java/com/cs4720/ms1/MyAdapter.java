@@ -33,7 +33,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), MapsActivity.class);
+                    Intent intent = new Intent(v.getContext(), TempMapActivity.class);
+                    //Intent intent = new Intent(v.getContext(), MapsActivity.class);
                     intent.putExtra("name",title.getText());
                     v.getContext().startActivity(intent);
                 }

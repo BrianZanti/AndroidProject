@@ -1,8 +1,12 @@
 package com.cs4720.ms1;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -13,6 +17,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.parse.Parse;
+import com.parse.ParseObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +35,28 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DBHelper db = new DBHelper(this);
+        db.createEvent("e1", 10,20);
+        /*Cursor c = db.getEvent("e1");
+        c.moveToFirst();
+        long start = c.getLong(1);
+        long end = c.getLong(2);
+        System.out.println();*/
+
+       /* SQLiteDatabase mydb = openOrCreateDatabase("fu", MODE_PRIVATE, null);
+        mydb.execSQL("CREATE TABLE IF NOT EXISTS Event(name VARCHAR(25),start BIGINT, end BIGINT);");
+        ContentValues values = new ContentValues();
+        double lat = 62.20465484;
+        values.put("latitude", lat);
+        values.put("longitude",lat);
+        mydb.insert("GPSCoords", null, values);
+        Cursor resultSet = mydb.rawQuery("Select * from GPSCoords",null);
+        resultSet.moveToFirst();
+        System.out.println(resultSet.getDouble(0));
+        System.out.println(resultSet.getDouble(1));
+        System.out.println(System.currentTimeMillis());*/
+
+
         setContentView(R.layout.content_splash);
         File f = new File(directory_path + "/profile_pic.jpg");
         if (f.exists()) {

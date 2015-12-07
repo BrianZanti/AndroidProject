@@ -1,5 +1,7 @@
 package com.cs4720.ms1;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,19 +46,14 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //String[] events = {"1","2","3","4","6","12","34","12","11","13","2","2","3","4","6","12","34","12","11","13","2"};
-        events = new ArrayList<>();
-        try {
-            events = (new FileIO()).getEvents(getApplicationContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        DBHelper db = new DBHelper(this);
+        events = db.getAllEvents();
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MyAdapter(events,getApplicationContext());
         mRecyclerView.setAdapter(mAdapter);
-
     }
 
     @Override
@@ -68,6 +65,11 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.viewCloudData){
+            Intent intent = new Intent(this,ViewCloudData.class);
+            startActivity(intent);
+            return true;
+        }
         Intent intent = new Intent(this, NewEvent.class);
         startActivity(intent);
         return true;
@@ -76,9 +78,20 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public void onStart() {
         super.onStart();
+        /*Alarm a = new Alarm();
+        //a.setAlarm(this, "",System.currentTimeMillis()+20000);
+        DBHelper db = new DBHelper(this);
+        Cursor c = db.getAllEvents();
+        c.moveToFirst();
+        for(int i = 0; i <c.getCount(); i++){
+            String name = c.getString(0);
+            long start = c.getLong(1);
+            long end = c.getLong(2);
+            c.moveToNext();
+        }
         events = new ArrayList<>();
         try {
-            events = (new FileIO()).getEvents(getApplicationContext());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -96,14 +109,14 @@ public class MainActivity extends AppCompatActivity{
                 e.launchService();
             }
         }
-
+*/
     }
 
     /*public void submitEventName(View view) throws IOException {
         EditText name = (EditText)findViewById(R.id.name_input);
         String eventName = name.getText().toString();
         TextView eventExists = (TextView)findViewById(R.id.eventExists);
-        FileIO fio = new FileIO();
+
         eventExists.setText(String.valueOf(fio.containsEventName(eventName, getApplicationContext())));
     }*/
 
@@ -117,18 +130,11 @@ public class MainActivity extends AppCompatActivity{
         startActivity(intent);
     }
 
-    public void clearDB(View view) throws IOException {
-        FileIO fio = new FileIO();
-        fio.clearDB(getApplicationContext());
-        String[][] data = fio.readFile(getApplicationContext());
-        String s;
-    }
-
     public void showEvents(View view){
 
         /*EventTracker[] events = {};
         try {
-            events = (new FileIO()).getEvents(getApplicationContext());
+
         } catch (IOException e) {
             e.printStackTrace();
         }*/

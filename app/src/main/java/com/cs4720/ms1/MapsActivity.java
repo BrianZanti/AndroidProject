@@ -17,8 +17,6 @@ import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +24,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
     }
 
     public void alert(String alert) {
@@ -36,15 +33,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         EventTracker e = new EventTracker();
-        try {
-            e = (new FileIO()).getEvent(getApplicationContext(), getIntent().getStringExtra("name"));
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        ArrayList<LatLng> coords = e.getCoords();
+        e = (new DBHelper(this)).getEvent(getIntent().getStringExtra("name"));
+        ArrayList<Coord> coords = e.getCoords();
         for(int i = 0; i < coords.size(); i++) {
-            LatLng ll = coords.get(i);
-            googleMap.addMarker(new MarkerOptions().position(ll).title(getIntent().getStringExtra("name")));
+            Coord c = coords.get(i);
+            LatLng ll = new LatLng(c.lat,c.lon);
+            googleMap.addMarker(new MarkerOptions().position(ll).title(String.valueOf(c.time)));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(ll));
         }
     }

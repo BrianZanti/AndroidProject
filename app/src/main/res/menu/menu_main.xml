@@ -6,4 +6,10 @@
         android:showAsAction="always"
         >
     </item>
+    <item android:id="@+id/viewCloudData"
+        android:title="View Cloud Data"
+        android:icon="@android:drawable/btn_plus"
+        android:showAsAction="always"
+        >
+    </item>
 </menu>

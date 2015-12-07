@@ -8,4 +8,6 @@
     <string name="element_text">Element</string>
     <string name="title_activity_show_event">ShowEvent</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_view_cloud_data">ViewCloudData</string>
+    <string name="title_activity_temp_map">TempMapActivity</string>
 </resources>
